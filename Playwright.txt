@@ -1,0 +1,34 @@
+Playwright là một thư viện kiểm thử tự động trình duyệt (browser automation) hiện đại, hỗ trợ nhiều ngôn ngữ (JavaScript/TypeScript, Python, Java, .NET), cho phép bạn viết test UI cho web app một cách mạnh mẽ và ổn định
+* Một test cơ bản
+const { chromium } = require('playwright');
+
+(async () => {
+  const browser = await chromium.launch({ headless: false }); // Hiện browser
+  const page = await browser.newPage();
+  await page.goto('https://example.com');
+  await page.screenshot({ path: 'screenshot.png' });
+  await browser.close();
+})();
+* Cấu trúc test
+// example.spec.js
+const { test, expect } = require('@playwright/test');
+
+test('truy cập trang và kiểm tra tiêu đề', async ({ page }) => {
+  await page.goto('https://example.com');
+  await expect(page).toHaveTitle(/Example/);
+});
+* Test API bằng Playwright
+import { test, expect, request } from '@playwright/test';
+
+test('Gửi request API và kiểm tra kết quả', async ({ request }) => {
+  const response = await request.post('https://api.example.com/login', {
+    data: {
+      email: 'test@example.com',
+      password: 'yourPassword'
+    }
+  });
+
+  expect(response.ok()).toBeTruthy();
+  const json = await response.json();
+  expect(json.token).toBeDefined();
+});
